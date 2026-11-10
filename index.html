@@ -21,7 +21,6 @@
         <span class="bg-yellow-400 text-gray-900 font-extrabold px-2.5 py-1 rounded-lg text-lg tracking-tight">TÁCHIRA</span>
         <span class="text-xl font-bold text-gray-800">DIGITAL</span>
       </div>
-      <!-- BOTÓN NAVBAR CON TU NÚMERO -->
       <a href="https://wa.me/584247393501?text=Hola,%20quiero%20registrar%20mi%20negocio%20en%20T%C3%A1chira%20Digital" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs sm:text-sm px-3.5 py-2 rounded-xl transition shadow-sm">
         Sumar mi negocio
       </a>
@@ -57,9 +56,7 @@
     <!-- BARRA DE CATEGORÍAS -->
     <div class="mb-8">
       <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Categorías destacadas</h3>
-      <div class="flex flex-wrap gap-2" id="categoryContainer">
-        <!-- Renderizado dinámico desde JS -->
-      </div>
+      <div class="flex flex-wrap gap-2" id="categoryContainer"></div>
     </div>
 
     <!-- ENCABEZADO RESULTADOS -->
@@ -72,13 +69,11 @@
     </div>
 
     <!-- GRID DE COMERCIOS -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="directoryGrid">
-      <!-- Tarjetas inyectadas por JS -->
-    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="directoryGrid"></div>
 
   </main>
 
-  <!-- BANNER PITCH COMERCIANTES CON TU NÚMERO -->
+  <!-- BANNER PITCH COMERCIANTES -->
   <section class="bg-blue-50 border-t border-b border-blue-100 py-10 px-4 mt-8">
     <div class="max-w-4xl mx-auto text-center space-y-3">
       <h2 class="text-xl sm:text-2xl font-bold text-blue-950">¿Tienes un comercio o negocio en Capacho?</h2>
@@ -98,7 +93,7 @@
     <p>© 2026 Táchira Digital — El directorio comercial de nuestra gente.</p>
   </footer>
 
-  <!-- MODAL DE FICHA INDIVIDUAL -->
+  <!-- MODAL -->
   <div id="businessModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white w-full max-w-lg rounded-3xl overflow-hidden shadow-2xl max-h-[90vh] flex flex-col">
       <div class="p-4 bg-gray-100 border-b flex justify-between items-center">
@@ -132,7 +127,7 @@
     </div>
   </div>
 
-  <!-- LÓGICA CON HORA EN VIVO -->
+  <!-- SCRIPT SEGURO -->
   <script>
     const businesses = [
       {
@@ -144,4 +139,177 @@
         openHour: 7.5,
         closeHour: 19,
         payments: "Pago Móvil, Efectivo, Zelle, Pesos",
-        phone:
+        phone: "+58 414-0000000",
+        whatsapp: "584140000000",
+        description: "Venta de víveres en general, embutidos frescos, quesos andinos de primera y atención rápida.",
+        catalog: ["Queso Blanco Duro / Semiduro", "Charcutería al corte", "Víveres de la canasta básica"]
+      },
+      {
+        id: "autorepuestos-el-camino",
+        name: "AutoRepuestos El Camino",
+        category: "Repuestos",
+        address: "Troncal 1, Sector El Corozo, Capacho",
+        hoursText: "8:00 AM - 5:00 PM (Lunes a Viernes)",
+        openHour: 8,
+        closeHour: 17,
+        payments: "Pago Móvil, Dólares, Pesos, Zelle",
+        phone: "+58 424-0000000",
+        whatsapp: "584240000000",
+        description: "Especialistas en lubricantes, filtros, frenos y tren delantero para vehículos particulares y de carga.",
+        catalog: ["Aceites sintéticos y minerales", "Pastillas de freno", "Baterías para carro con garantía"]
+      },
+      {
+        id: "panaderia-el-molino",
+        name: "Panadería & Dulcería El Molino",
+        category: "Gastronomía",
+        address: "Calle 4, Frente a la Iglesia, Capacho",
+        hoursText: "6:00 AM - 8:00 PM (Todos los días)",
+        openHour: 6,
+        closeHour: 20,
+        payments: "Pago Móvil, Punto de Venta, Efectivo",
+        phone: "+58 412-0000000",
+        whatsapp: "584120000000",
+        description: "El mejor pan caliente de la zona, acemas tochadas, pastelería fina y café recién colado.",
+        catalog: ["Pan piñita y sobado caliente", "Acemas andinas", "Café espresso y con leche"]
+      }
+    ];
+
+    const categories = ["Todas", "Víveres", "Repuestos", "Gastronomía", "Servicios"];
+    let selectedCategory = "Todas";
+
+    function getBusinessStatus(openHour, closeHour) {
+      try {
+        const now = new Date();
+        const currentDecimalTime = now.getHours() + now.getMinutes() / 60;
+        if (currentDecimalTime >= openHour && currentDecimalTime < closeHour) {
+          return { text: "Abierto", class: "bg-green-500" };
+        } else {
+          return { text: "Cerrado", class: "bg-red-500" };
+        }
+      } catch (e) {
+        return { text: "Abierto", class: "bg-green-500" };
+      }
+    }
+
+    function renderCategories() {
+      const container = document.getElementById("categoryContainer");
+      if (!container) return;
+      container.innerHTML = categories.map(cat => {
+        const isActive = cat === selectedCategory;
+        const activeClass = isActive ? "bg-blue-600 text-white font-bold" : "bg-white text-gray-700 hover:bg-gray-100 border border-gray-200";
+        return `<button onclick="selectCategory('${cat}')" class="px-4 py-1.5 rounded-xl text-xs transition ${activeClass}">${cat}</button>`;
+      }).join('');
+    }
+
+    function renderDirectory(data) {
+      const grid = document.getElementById("directoryGrid");
+      const countEl = document.getElementById("businessCount");
+      if (!grid || !countEl) return;
+      
+      countEl.innerText = `${data.length} comercios`;
+
+      if (data.length === 0) {
+        grid.innerHTML = `
+          <div class="col-span-full text-center py-12 text-gray-500">
+            <p class="text-base font-semibold">No encontramos comercios en esta búsqueda.</p>
+            <p class="text-xs mt-1">Prueba seleccionando otra categoría o limpiando el buscador.</p>
+          </div>`;
+        return;
+      }
+
+      grid.innerHTML = data.map(b => {
+        const status = getBusinessStatus(b.openHour, b.closeHour);
+        return `
+          <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition flex flex-col justify-between">
+            <div>
+              <div class="h-36 bg-gray-100 relative flex items-center justify-center text-gray-400 text-xs font-bold border-b border-gray-100">
+                [ Foto Fachada ]
+                <span class="absolute top-3 right-3 ${status.class} text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
+                  ${status.text}
+                </span>
+                <span class="absolute top-3 left-3 bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-0.5 rounded-md">
+                  ${b.category}
+                </span>
+              </div>
+              <div class="p-5 space-y-2">
+                <h3 class="font-bold text-base text-gray-900 leading-snug">${b.name}</h3>
+                <p class="text-xs text-gray-500">📍 ${b.address}</p>
+                <div class="text-xs text-gray-600 space-y-1 pt-1">
+                  <p>⏰ <strong>Horario:</strong> ${b.hoursText}</p>
+                  <p>💳 <strong>Pagos:</strong> ${b.payments}</p>
+                </div>
+              </div>
+            </div>
+            <div class="p-5 pt-0 space-y-2">
+              <button onclick="openModal('${b.id}')" class="w-full text-center bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-2 rounded-xl text-xs transition">
+                Ver ficha completa
+              </button>
+              <a href="https://wa.me/${b.whatsapp}?text=Hola,%20los%20vi%20en%20T%C3%A1chira%20Digital" target="_blank" class="block w-full text-center bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-xl text-xs transition">
+                WhatsApp directo
+              </a>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function filterDirectory() {
+      const searchInput = document.getElementById("searchInput");
+      const query = searchInput ? searchInput.value.toLowerCase() : "";
+      const filtered = businesses.filter(b => {
+        const matchesCategory = selectedCategory === "Todas" || b.category === selectedCategory;
+        const matchesQuery = b.name.toLowerCase().includes(query) || 
+                             b.category.toLowerCase().includes(query) || 
+                             b.description.toLowerCase().includes(query) ||
+                             b.address.toLowerCase().includes(query);
+        return matchesCategory && matchesQuery;
+      });
+      renderDirectory(filtered);
+    }
+
+    function selectCategory(cat) {
+      selectedCategory = cat;
+      renderCategories();
+      filterDirectory();
+    }
+
+    function resetFilters() {
+      selectedCategory = "Todas";
+      const searchInput = document.getElementById("searchInput");
+      if (searchInput) searchInput.value = "";
+      renderCategories();
+      renderDirectory(businesses);
+    }
+
+    function openModal(id) {
+      const item = businesses.find(b => b.id === id);
+      if (!item) return;
+
+      document.getElementById("modalCategory").innerText = item.category;
+      document.getElementById("modalTitle").innerText = item.name;
+      document.getElementById("modalAddress").innerText = `📍 ${item.address}`;
+      document.getElementById("modalHours").innerText = item.hoursText;
+      document.getElementById("modalPayments").innerText = item.payments;
+      document.getElementById("modalPhone").innerText = item.phone;
+      document.getElementById("modalDescription").innerText = item.description;
+
+      const catalogContainer = document.getElementById("modalCatalog");
+      catalogContainer.innerHTML = item.catalog.map(prod => `<li>${prod}</li>`).join('');
+
+      document.getElementById("modalWhatsappBtn").href = `https://wa.me/${item.whatsapp}?text=Hola,%20vi%20su%20perfil%20en%20T%C3%A1chira%20Digital%20y%20deseo%20m%C3%A1s%20informaci%C3%B3n.`;
+
+      document.getElementById("businessModal").classList.remove("hidden");
+    }
+
+    function closeModal() {
+      document.getElementById("businessModal").classList.add("hidden");
+    }
+
+    // Inicializar al cargar
+    window.onload = function() {
+      renderCategories();
+      renderDirectory(businesses);
+    };
+  </script>
+</body>
+</html>
