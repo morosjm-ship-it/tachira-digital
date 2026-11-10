@@ -120,14 +120,14 @@
         </div>
       </div>
       <div class="p-4 border-t bg-gray-50">
-        <a id="modalWhatsappBtn" href="#" target="_blank" class="block w-full text-center bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-xl text-sm transition shadow-sm">
+        <a id="modalWhatsappBtn" href="#" target="_blank" class="block w-full text-center font-bold py-3 rounded-xl text-sm transition shadow-sm">
           Escribir por WhatsApp
         </a>
       </div>
     </div>
   </div>
 
-  <!-- SCRIPT SEGURO -->
+  <!-- SCRIPT CON BOTÓN INTELIGENTE -->
   <script>
     const businesses = [
       {
@@ -182,12 +182,12 @@
         const now = new Date();
         const currentDecimalTime = now.getHours() + now.getMinutes() / 60;
         if (currentDecimalTime >= openHour && currentDecimalTime < closeHour) {
-          return { text: "Abierto", class: "bg-green-500" };
+          return { text: "Abierto", class: "bg-green-500", isOpen: true };
         } else {
-          return { text: "Cerrado", class: "bg-red-500" };
+          return { text: "Cerrado", class: "bg-red-500", isOpen: false };
         }
       } catch (e) {
-        return { text: "Abierto", class: "bg-green-500" };
+        return { text: "Abierto", class: "bg-green-500", isOpen: true };
       }
     }
 
@@ -219,6 +219,21 @@
 
       grid.innerHTML = data.map(b => {
         const status = getBusinessStatus(b.openHour, b.closeHour);
+        
+        // Configurar botón según esté abierto o cerrado
+        let whatsappButtonHTML = "";
+        if (status.isOpen) {
+          whatsappButtonHTML = `
+            <a href="https://wa.me/${b.whatsapp}?text=Hola,%20los%20vi%20en%20T%C3%A1chira%20Digital" target="_blank" class="block w-full text-center bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-xl text-xs transition shadow-sm">
+              WhatsApp directo
+            </a>`;
+        } else {
+          whatsappButtonHTML = `
+            <div class="w-full text-center bg-gray-200 text-gray-400 font-semibold py-2 rounded-xl text-xs cursor-not-allowed select-none">
+              Local Cerrado (No disponible)
+            </div>`;
+        }
+
         return `
           <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition flex flex-col justify-between">
             <div>
@@ -244,9 +259,7 @@
               <button onclick="openModal('${b.id}')" class="w-full text-center bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-2 rounded-xl text-xs transition">
                 Ver ficha completa
               </button>
-              <a href="https://wa.me/${b.whatsapp}?text=Hola,%20los%20vi%20en%20T%C3%A1chira%20Digital" target="_blank" class="block w-full text-center bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-xl text-xs transition">
-                WhatsApp directo
-              </a>
+              ${whatsappButtonHTML}
             </div>
           </div>
         `;
@@ -285,6 +298,8 @@
       const item = businesses.find(b => b.id === id);
       if (!item) return;
 
+      const status = getBusinessStatus(item.openHour, item.closeHour);
+
       document.getElementById("modalCategory").innerText = item.category;
       document.getElementById("modalTitle").innerText = item.name;
       document.getElementById("modalAddress").innerText = `📍 ${item.address}`;
@@ -296,7 +311,19 @@
       const catalogContainer = document.getElementById("modalCatalog");
       catalogContainer.innerHTML = item.catalog.map(prod => `<li>${prod}</li>`).join('');
 
-      document.getElementById("modalWhatsappBtn").href = `https://wa.me/${item.whatsapp}?text=Hola,%20vi%20su%20perfil%20en%20T%C3%A1chira%20Digital%20y%20deseo%20m%C3%A1s%20informaci%C3%B3n.`;
+      // Ajustar también el botón dentro del modal según el estado
+      const modalBtn = document.getElementById("modalWhatsappBtn");
+      if (status.isOpen) {
+        modalBtn.href = `https://wa.me/${item.whatsapp}?text=Hola,%20vi%20su%20perfil%20en%20T%C3%A1chira%20Digital%20y%20deseo%20m%C3%A1s%20informaci%C3%B3n.`;
+        modalBtn.className = "block w-full text-center bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-xl text-sm transition shadow-sm";
+        modalBtn.innerText = "Escribir por WhatsApp";
+        modalBtn.style.pointerEvents = "auto";
+      } else {
+        modalBtn.href = "#";
+        modalBtn.className = "block w-full text-center bg-gray-200 text-gray-400 font-bold py-3 rounded-xl text-sm cursor-not-allowed select-none";
+        modalBtn.innerText = "Local Cerrado (No disponible)";
+        modalBtn.style.pointerEvents = "none";
+      }
 
       document.getElementById("businessModal").classList.remove("hidden");
     }
@@ -305,7 +332,6 @@
       document.getElementById("businessModal").classList.add("hidden");
     }
 
-    // Inicializar al cargar
     window.onload = function() {
       renderCategories();
       renderDirectory(businesses);
