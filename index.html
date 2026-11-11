@@ -93,7 +93,7 @@
     <p>© 2026 Táchira Digital — El directorio comercial de nuestra gente.</p>
   </footer>
 
-  <!-- MODAL -->
+  <!-- MODAL DE FICHA INDIVIDUAL Y CATÁLOGO DETALLADO -->
   <div id="businessModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white w-full max-w-lg rounded-3xl overflow-hidden shadow-2xl max-h-[90vh] flex flex-col">
       <div class="p-4 bg-gray-100 border-b flex justify-between items-center">
@@ -105,30 +105,41 @@
           <h2 class="text-2xl font-extrabold text-gray-900" id="modalTitle">Nombre del Comercio</h2>
           <p class="text-xs text-gray-500 mt-1" id="modalAddress">📍 Dirección</p>
         </div>
+
         <div class="bg-gray-50 p-4 rounded-2xl border border-gray-100 space-y-2 text-xs sm:text-sm">
           <p class="text-gray-700">⏰ <strong class="text-gray-900">Horario:</strong> <span id="modalHours">--</span></p>
           <p class="text-gray-700">💳 <strong class="text-gray-900">Métodos de pago:</strong> <span id="modalPayments">--</span></p>
           <p class="text-gray-700">📞 <strong class="text-gray-900">Teléfono/WhatsApp:</strong> <span id="modalPhone">--</span></p>
         </div>
+
         <div>
-          <h3 class="font-bold text-sm text-gray-900 mb-1">Descripción / Servicios</h3>
+          <h3 class="font-bold text-sm text-gray-900 mb-1">Sobre el negocio</h3>
           <p class="text-xs text-gray-600 leading-relaxed" id="modalDescription">--</p>
         </div>
+
+        <!-- CATÁLOGO / SERVICIOS ESTILO LISTA/TIENDA -->
         <div>
-          <h3 class="font-bold text-sm text-gray-900 mb-2">Catálogo / Highlights</h3>
-          <ul class="text-xs text-gray-600 space-y-1 list-disc list-inside bg-blue-50/50 p-3 rounded-xl border border-blue-100" id="modalCatalog"></ul>
+          <h3 class="font-bold text-sm text-gray-900 mb-2">Catálogo de Productos / Servicios</h3>
+          <div class="space-y-2" id="modalCatalog">
+            <!-- Inyectado por JS -->
+          </div>
         </div>
       </div>
-      <div class="p-4 border-t bg-gray-50">
+
+      <!-- BOTONES FOOTER MODAL -->
+      <div class="p-4 border-t bg-gray-50 space-y-2">
         <a id="modalWhatsappBtn" href="#" target="_blank" class="block w-full text-center font-bold py-3 rounded-xl text-sm transition shadow-sm">
           Escribir por WhatsApp
         </a>
+        <button onclick="copyBusinessLink()" class="w-full text-center bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2 rounded-xl text-xs transition">
+          📋 Copiar enlace directo de este perfil
+        </button>
       </div>
     </div>
   </div>
 
-  <!-- SCRIPT CON BOTÓN INTELIGENTE -->
   <script>
+    // BASE DE DATOS CON ESTRUCTURA DE CATÁLOGO DETALLADA
     const businesses = [
       {
         id: "abasto-la-principal",
@@ -142,40 +153,54 @@
         phone: "+58 414-0000000",
         whatsapp: "584140000000",
         description: "Venta de víveres en general, embutidos frescos, quesos andinos de primera y atención rápida.",
-        catalog: ["Queso Blanco Duro / Semiduro", "Charcutería al corte", "Víveres de la canasta básica"]
+        catalog: [
+          { item: "Queso Blanco Duro / Semiduro", detail: "Fresco del día - Por kilo / medio kilo" },
+          { item: "Charcutería al corte", detail: "Jamón, Mortadela, Queso Amarillo" },
+          { item: "Víveres canasta básica", detail: "Harina, Arroz, Aceite, Granos" }
+        ]
       },
       {
-        id: "autorepuestos-el-camino",
-        name: "AutoRepuestos El Camino",
+        id: "moto-repuestos-capacho",
+        name: "Moto Repuestos & Taller El Rayo",
         category: "Repuestos",
-        address: "Troncal 1, Sector El Corozo, Capacho",
-        hoursText: "8:00 AM - 5:00 PM (Lunes a Viernes)",
+        address: "Av. Intercomunal, Capacho Nuevo",
+        hoursText: "8:00 AM - 6:00 PM (Lunes a Sábado)",
         openHour: 8,
-        closeHour: 17,
-        payments: "Pago Móvil, Dólares, Pesos, Zelle",
-        phone: "+58 424-0000000",
-        whatsapp: "584240000000",
-        description: "Especialistas en lubricantes, filtros, frenos y tren delantero para vehículos particulares y de carga.",
-        catalog: ["Aceites sintéticos y minerales", "Pastillas de freno", "Baterías para carro con garantía"]
+        closeHour: 18,
+        payments: "Pago Móvil, Pesos, Dólares, Zelle",
+        phone: "+58 424-7393501",
+        whatsapp: "584247393501",
+        description: "Venta de repuestos para motos Bera, Empire, Honda y servicio técnico especializado en frenos y motor.",
+        catalog: [
+          { item: "Kit de Arrastre (Cadena y Piñón)", detail: "Para Bera 150 / Bera BR200" },
+          { item: "Caucho Trasero 3.00-18 / 110/90-16", detail: "Marcas variadas y reforzadas" },
+          { item: "Aceites para Motor (10W40 / 20W50)", detail: "Motul, Shell, mineral y semi-sintético" },
+          { item: "Servicio de Mantenimiento General", detail: "Ajuste de carburación, frenos y tren delantero" }
+        ]
       },
       {
-        id: "panaderia-el-molino",
-        name: "Panadería & Dulcería El Molino",
-        category: "Gastronomía",
-        address: "Calle 4, Frente a la Iglesia, Capacho",
-        hoursText: "6:00 AM - 8:00 PM (Todos los días)",
-        openHour: 6,
-        closeHour: 20,
-        payments: "Pago Móvil, Punto de Venta, Efectivo",
-        phone: "+58 412-0000000",
-        whatsapp: "584120000000",
-        description: "El mejor pan caliente de la zona, acemas tochadas, pastelería fina y café recién colado.",
-        catalog: ["Pan piñita y sobado caliente", "Acemas andinas", "Café espresso y con leche"]
+        id: "boutique-style-capacho",
+        name: "Boutique & Moda Style",
+        category: "Servicios",
+        address: "Calle Comercio, frente al Mercado, Capacho",
+        hoursText: "9:00 AM - 6:00 PM (Lunes a Sábado)",
+        openHour: 9,
+        closeHour: 18,
+        payments: "Pago Móvil, Pesos, Dólares, Zelle",
+        phone: "+58 424-7393501",
+        whatsapp: "584247393501",
+        description: "Ropa para damas, caballeros y niños. Calzado, accesorios e importaciones directas.",
+        catalog: [
+          { item: "Jeans Over Size & Skinny Damas", detail: "Tallas de la 26 a la 36" },
+          { item: "Franelas de Algodón Básico / Estampado", detail: "Caballeros - Variedad de colores" },
+          { item: "Zapatos Deportivos & Casuales", detail: "Tallas variadas para dama y caballero" }
+        ]
       }
     ];
 
     const categories = ["Todas", "Víveres", "Repuestos", "Gastronomía", "Servicios"];
     let selectedCategory = "Todas";
+    let currentOpenedBusinessId = null;
 
     function getBusinessStatus(openHour, closeHour) {
       try {
@@ -220,7 +245,6 @@
       grid.innerHTML = data.map(b => {
         const status = getBusinessStatus(b.openHour, b.closeHour);
         
-        // Configurar botón según esté abierto o cerrado
         let whatsappButtonHTML = "";
         if (status.isOpen) {
           whatsappButtonHTML = `
@@ -257,7 +281,7 @@
             </div>
             <div class="p-5 pt-0 space-y-2">
               <button onclick="openModal('${b.id}')" class="w-full text-center bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-2 rounded-xl text-xs transition">
-                Ver ficha completa
+                Ver ficha & catálogo
               </button>
               ${whatsappButtonHTML}
             </div>
@@ -298,6 +322,9 @@
       const item = businesses.find(b => b.id === id);
       if (!item) return;
 
+      currentOpenedBusinessId = id;
+      window.location.hash = id; // Actualiza la URL para que sea compartible
+
       const status = getBusinessStatus(item.openHour, item.closeHour);
 
       document.getElementById("modalCategory").innerText = item.category;
@@ -308,13 +335,19 @@
       document.getElementById("modalPhone").innerText = item.phone;
       document.getElementById("modalDescription").innerText = item.description;
 
+      // Renderizar catálogo como cajitas/tarjetas limpias
       const catalogContainer = document.getElementById("modalCatalog");
-      catalogContainer.innerHTML = item.catalog.map(prod => `<li>${prod}</li>`).join('');
+      catalogContainer.innerHTML = item.catalog.map(prod => `
+        <div class="bg-blue-50/60 p-3 rounded-xl border border-blue-100/80 flex flex-col justify-between">
+          <span class="font-bold text-xs text-gray-900">${prod.item}</span>
+          <span class="text-[11px] text-gray-500 mt-0.5">${prod.detail}</span>
+        </div>
+      `).join('');
 
-      // Ajustar también el botón dentro del modal según el estado
+      // Botón WhatsApp
       const modalBtn = document.getElementById("modalWhatsappBtn");
       if (status.isOpen) {
-        modalBtn.href = `https://wa.me/${item.whatsapp}?text=Hola,%20vi%20su%20perfil%20en%20T%C3%A1chira%20Digital%20y%20deseo%20m%C3%A1s%20informaci%C3%B3n.`;
+        modalBtn.href = `https://wa.me/${item.whatsapp}?text=Hola,%20vi%20su%20perfil%20en%20T%C3%A1chira%20Digital%20y%20me%20interesa%20informaci%C3%B3n.`;
         modalBtn.className = "block w-full text-center bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-xl text-sm transition shadow-sm";
         modalBtn.innerText = "Escribir por WhatsApp";
         modalBtn.style.pointerEvents = "auto";
@@ -330,11 +363,29 @@
 
     function closeModal() {
       document.getElementById("businessModal").classList.add("hidden");
+      history.pushState("", document.title, window.location.pathname + window.location.search); // Limpia el # sin recargar
+    }
+
+    function copyBusinessLink() {
+      if (!currentOpenedBusinessId) return;
+      const shareUrl = `${window.location.origin}/#${currentOpenedBusinessId}`;
+      navigator.clipboard.writeText(shareUrl).then(() => {
+        alert("¡Enlace copiado al portapapeles! Puedes pegarlo en tus redes sociales.");
+      });
+    }
+
+    // ABRIR DIRECTO SI LA URL TIENE UN #ID
+    function checkUrlHash() {
+      const hash = window.location.hash.replace('#', '');
+      if (hash) {
+        openModal(hash);
+      }
     }
 
     window.onload = function() {
       renderCategories();
       renderDirectory(businesses);
+      checkUrlHash();
     };
   </script>
 </body>
