@@ -4,15 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Táchira Digital | Directorio Comercial & Guía Local</title>
-  <link rel="icon" type="image/png" href="assets/isotipo.png">
-  <meta name="theme-color" content="#FFD200">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     body { font-family: 'Inter', sans-serif; }
-  ::selection { background: #FFD200; color: #000000; }
   </style>
 </head>
 <body class="bg-gray-50 text-gray-900 antialiased min-h-screen flex flex-col">
@@ -20,17 +17,18 @@
   <!-- NAVBAR -->
   <header class="bg-white border-b border-gray-200 sticky top-0 z-40">
     <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
-      <div class="flex items-center cursor-pointer" onclick="resetFilters()" aria-label="Táchira Digital, inicio">
-        <img src="assets/imagotipo.png" alt="Táchira Digital — Compra local, apoya lo nuestro" class="brand-logo">
+      <div class="flex items-center space-x-2 cursor-pointer" onclick="resetFilters()">
+        <span class="bg-yellow-400 text-gray-900 font-extrabold px-2.5 py-1 rounded-lg text-lg tracking-tight">TÁCHIRA</span>
+        <span class="text-xl font-bold text-gray-800">DIGITAL</span>
       </div>
-      <a href="https://wa.me/584247393501?text=Hola,%20quiero%20registrar%20mi%20negocio%20en%20T%C3%A1chira%20Digital" target="_blank" class="bg-yellow-400 text-gray-900 hover:bg-yellow-500 text-white font-semibold text-xs sm:text-sm px-3.5 py-2 rounded-xl transition shadow-sm">
+      <a href="https://wa.me/584247393501?text=Hola,%20quiero%20registrar%20mi%20negocio%20en%20T%C3%A1chira%20Digital" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs sm:text-sm px-3.5 py-2 rounded-xl transition shadow-sm">
         Sumar mi negocio
       </a>
     </div>
   </header>
 
   <!-- HERO SECTION -->
-  <section class="bg-black text-white py-12 px-4 text-center">
+  <section class="bg-gradient-to-b from-blue-900 to-gray-900 text-white py-12 px-4 text-center">
     <div class="max-w-3xl mx-auto space-y-5">
       <span class="bg-yellow-400/20 text-yellow-300 font-semibold text-xs uppercase tracking-wider px-3 py-1 rounded-full border border-yellow-400/30 inline-block">
         📍 Piloto Oficial: Capacho Viejo & Nuevo
@@ -76,14 +74,14 @@
   </main>
 
   <!-- BANNER PITCH COMERCIANTES -->
-  <section class="bg-yellow-50 border-t border-b border-yellow-200 py-10 px-4 mt-8">
+  <section class="bg-blue-50 border-t border-b border-blue-100 py-10 px-4 mt-8">
     <div class="max-w-4xl mx-auto text-center space-y-3">
-      <h2 class="text-xl sm:text-2xl font-bold text-gray-950">¿Tienes un comercio o negocio en Capacho?</h2>
+      <h2 class="text-xl sm:text-2xl font-bold text-blue-950">¿Tienes un comercio o negocio en Capacho?</h2>
       <p class="text-gray-600 text-xs sm:text-sm max-w-xl mx-auto">
         Te ayudamos a actualizar tu perfil en Google Maps, creamos tu catálogo digital y te conectamos directo al WhatsApp de tus clientes.
       </p>
       <div class="pt-2">
-        <a href="https://wa.me/584247393501?text=Hola,%20quiero%20informaci%C3%B3n%20para%20registrar%20mi%20comercio%20en%20T%C3%A1chira%20Digital" target="_blank" class="inline-block bg-yellow-400 text-gray-900 hover:bg-yellow-500 text-white font-bold px-6 py-2.5 rounded-xl text-sm transition shadow-md">
+        <a href="https://wa.me/584247393501?text=Hola,%20quiero%20informaci%C3%B3n%20para%20registrar%20mi%20comercio%20en%20T%C3%A1chira%20Digital" target="_blank" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold px-6 py-2.5 rounded-xl text-sm transition shadow-md">
           Quiero registrar mi negocio
         </a>
       </div>
@@ -99,7 +97,7 @@
   <div id="businessModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white w-full max-w-lg rounded-3xl overflow-hidden shadow-2xl max-h-[90vh] flex flex-col">
       <div class="p-4 bg-gray-100 border-b flex justify-between items-center">
-        <span class="text-xs font-bold text-yellow-700 uppercase tracking-wider" id="modalCategory">Categoría</span>
+        <span class="text-xs font-bold text-blue-600 uppercase tracking-wider" id="modalCategory">Categoría</span>
         <button onclick="closeModal()" class="text-gray-500 hover:text-gray-800 font-bold p-1 rounded-lg text-lg">✕</button>
       </div>
       <div class="p-6 space-y-4 overflow-y-auto flex-1">
@@ -221,7 +219,7 @@
       if (!container) return;
       container.innerHTML = categories.map(cat => {
         const isActive = cat === selectedCategory;
-        const activeClass = isActive ? "bg-yellow-400 text-gray-900 text-white font-bold" : "bg-white text-gray-700 hover:bg-gray-100 border border-gray-200";
+        const activeClass = isActive ? "bg-blue-600 text-white font-bold" : "bg-white text-gray-700 hover:bg-gray-100 border border-gray-200";
         return `<button onclick="selectCategory('${cat}')" class="px-4 py-1.5 rounded-xl text-xs transition ${activeClass}">${cat}</button>`;
       }).join('');
     }
@@ -266,7 +264,7 @@
                 <span class="absolute top-3 right-3 ${status.class} text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
                   ${status.text}
                 </span>
-                <span class="absolute top-3 left-3 bg-yellow-100 text-yellow-900 text-[10px] font-bold px-2 py-0.5 rounded-md">
+                <span class="absolute top-3 left-3 bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-0.5 rounded-md">
                   ${b.category}
                 </span>
               </div>
@@ -280,7 +278,7 @@
               </div>
             </div>
             <div class="p-5 pt-0 space-y-2">
-              <button onclick="openModal('${b.id}')" class="w-full text-center bg-black hover:bg-gray-800 text-white font-semibold py-2 rounded-xl text-xs transition">
+              <button onclick="openModal('${b.id}')" class="w-full text-center bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-2 rounded-xl text-xs transition">
                 Ver ficha & catálogo
               </button>
               ${whatsappButtonHTML}
@@ -338,7 +336,7 @@
       // Renderizar catálogo con imágenes en miniatura
       const catalogContainer = document.getElementById("modalCatalog");
       catalogContainer.innerHTML = item.catalog.map(prod => `
-        <div class="bg-yellow-50 p-2.5 rounded-xl border border-yellow-200 flex items-center gap-3">
+        <div class="bg-blue-50/60 p-2.5 rounded-xl border border-blue-100/80 flex items-center gap-3">
           <img src="${prod.img}" alt="${prod.item}" class="w-12 h-12 object-cover rounded-lg bg-gray-200 flex-shrink-0">
           <div>
             <span class="font-bold text-xs text-gray-900 block">${prod.item}</span>
