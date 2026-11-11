@@ -93,7 +93,7 @@
     <p>© 2026 Táchira Digital — El directorio comercial de nuestra gente.</p>
   </footer>
 
-  <!-- MODAL DE FICHA INDIVIDUAL Y CATÁLOGO DETALLADO -->
+  <!-- MODAL DE FICHA INDIVIDUAL Y CATÁLOGO CON IMÁGENES -->
   <div id="businessModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
     <div class="bg-white w-full max-w-lg rounded-3xl overflow-hidden shadow-2xl max-h-[90vh] flex flex-col">
       <div class="p-4 bg-gray-100 border-b flex justify-between items-center">
@@ -117,10 +117,10 @@
           <p class="text-xs text-gray-600 leading-relaxed" id="modalDescription">--</p>
         </div>
 
-        <!-- CATÁLOGO / SERVICIOS ESTILO LISTA/TIENDA -->
+        <!-- CATÁLOGO CON SOPORTE DE IMÁGENES -->
         <div>
           <h3 class="font-bold text-sm text-gray-900 mb-2">Catálogo de Productos / Servicios</h3>
-          <div class="space-y-2" id="modalCatalog">
+          <div class="space-y-2.5" id="modalCatalog">
             <!-- Inyectado por JS -->
           </div>
         </div>
@@ -139,7 +139,6 @@
   </div>
 
   <script>
-    // BASE DE DATOS CON ESTRUCTURA DE CATÁLOGO DETALLADA
     const businesses = [
       {
         id: "abasto-la-principal",
@@ -154,9 +153,9 @@
         whatsapp: "584140000000",
         description: "Venta de víveres en general, embutidos frescos, quesos andinos de primera y atención rápida.",
         catalog: [
-          { item: "Queso Blanco Duro / Semiduro", detail: "Fresco del día - Por kilo / medio kilo" },
-          { item: "Charcutería al corte", detail: "Jamón, Mortadela, Queso Amarillo" },
-          { item: "Víveres canasta básica", detail: "Harina, Arroz, Aceite, Granos" }
+          { item: "Queso Blanco Duro / Semiduro", detail: "Fresco del día - Por kilo", img: "https://images.unsplash.com/photo-1486297678162-eb2a19b0a32d?auto=format&fit=crop&w=150&q=80" },
+          { item: "Charcutería al corte", detail: "Jamón y embutidos variados", img: "https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=150&q=80" },
+          { item: "Víveres canasta básica", detail: "Harina, arroz y aceite", img: "https://images.unsplash.com/photo-1584727638096-042c45049ebe?auto=format&fit=crop&w=150&q=80" }
         ]
       },
       {
@@ -171,222 +170,4 @@
         phone: "+58 424-7393501",
         whatsapp: "584247393501",
         description: "Venta de repuestos para motos Bera, Empire, Honda y servicio técnico especializado en frenos y motor.",
-        catalog: [
-          { item: "Kit de Arrastre (Cadena y Piñón)", detail: "Para Bera 150 / Bera BR200" },
-          { item: "Caucho Trasero 3.00-18 / 110/90-16", detail: "Marcas variadas y reforzadas" },
-          { item: "Aceites para Motor (10W40 / 20W50)", detail: "Motul, Shell, mineral y semi-sintético" },
-          { item: "Servicio de Mantenimiento General", detail: "Ajuste de carburación, frenos y tren delantero" }
-        ]
-      },
-      {
-        id: "boutique-style-capacho",
-        name: "Boutique & Moda Style",
-        category: "Servicios",
-        address: "Calle Comercio, frente al Mercado, Capacho",
-        hoursText: "9:00 AM - 6:00 PM (Lunes a Sábado)",
-        openHour: 9,
-        closeHour: 18,
-        payments: "Pago Móvil, Pesos, Dólares, Zelle",
-        phone: "+58 424-7393501",
-        whatsapp: "584247393501",
-        description: "Ropa para damas, caballeros y niños. Calzado, accesorios e importaciones directas.",
-        catalog: [
-          { item: "Jeans Over Size & Skinny Damas", detail: "Tallas de la 26 a la 36" },
-          { item: "Franelas de Algodón Básico / Estampado", detail: "Caballeros - Variedad de colores" },
-          { item: "Zapatos Deportivos & Casuales", detail: "Tallas variadas para dama y caballero" }
-        ]
-      }
-    ];
-
-    const categories = ["Todas", "Víveres", "Repuestos", "Gastronomía", "Servicios"];
-    let selectedCategory = "Todas";
-    let currentOpenedBusinessId = null;
-
-    function getBusinessStatus(openHour, closeHour) {
-      try {
-        const now = new Date();
-        const currentDecimalTime = now.getHours() + now.getMinutes() / 60;
-        if (currentDecimalTime >= openHour && currentDecimalTime < closeHour) {
-          return { text: "Abierto", class: "bg-green-500", isOpen: true };
-        } else {
-          return { text: "Cerrado", class: "bg-red-500", isOpen: false };
-        }
-      } catch (e) {
-        return { text: "Abierto", class: "bg-green-500", isOpen: true };
-      }
-    }
-
-    function renderCategories() {
-      const container = document.getElementById("categoryContainer");
-      if (!container) return;
-      container.innerHTML = categories.map(cat => {
-        const isActive = cat === selectedCategory;
-        const activeClass = isActive ? "bg-blue-600 text-white font-bold" : "bg-white text-gray-700 hover:bg-gray-100 border border-gray-200";
-        return `<button onclick="selectCategory('${cat}')" class="px-4 py-1.5 rounded-xl text-xs transition ${activeClass}">${cat}</button>`;
-      }).join('');
-    }
-
-    function renderDirectory(data) {
-      const grid = document.getElementById("directoryGrid");
-      const countEl = document.getElementById("businessCount");
-      if (!grid || !countEl) return;
-      
-      countEl.innerText = `${data.length} comercios`;
-
-      if (data.length === 0) {
-        grid.innerHTML = `
-          <div class="col-span-full text-center py-12 text-gray-500">
-            <p class="text-base font-semibold">No encontramos comercios en esta búsqueda.</p>
-            <p class="text-xs mt-1">Prueba seleccionando otra categoría o limpiando el buscador.</p>
-          </div>`;
-        return;
-      }
-
-      grid.innerHTML = data.map(b => {
-        const status = getBusinessStatus(b.openHour, b.closeHour);
-        
-        let whatsappButtonHTML = "";
-        if (status.isOpen) {
-          whatsappButtonHTML = `
-            <a href="https://wa.me/${b.whatsapp}?text=Hola,%20los%20vi%20en%20T%C3%A1chira%20Digital" target="_blank" class="block w-full text-center bg-green-600 hover:bg-green-700 text-white font-semibold py-2 rounded-xl text-xs transition shadow-sm">
-              WhatsApp directo
-            </a>`;
-        } else {
-          whatsappButtonHTML = `
-            <div class="w-full text-center bg-gray-200 text-gray-400 font-semibold py-2 rounded-xl text-xs cursor-not-allowed select-none">
-              Local Cerrado (No disponible)
-            </div>`;
-        }
-
-        return `
-          <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition flex flex-col justify-between">
-            <div>
-              <div class="h-36 bg-gray-100 relative flex items-center justify-center text-gray-400 text-xs font-bold border-b border-gray-100">
-                [ Foto Fachada ]
-                <span class="absolute top-3 right-3 ${status.class} text-white text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">
-                  ${status.text}
-                </span>
-                <span class="absolute top-3 left-3 bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-0.5 rounded-md">
-                  ${b.category}
-                </span>
-              </div>
-              <div class="p-5 space-y-2">
-                <h3 class="font-bold text-base text-gray-900 leading-snug">${b.name}</h3>
-                <p class="text-xs text-gray-500">📍 ${b.address}</p>
-                <div class="text-xs text-gray-600 space-y-1 pt-1">
-                  <p>⏰ <strong>Horario:</strong> ${b.hoursText}</p>
-                  <p>💳 <strong>Pagos:</strong> ${b.payments}</p>
-                </div>
-              </div>
-            </div>
-            <div class="p-5 pt-0 space-y-2">
-              <button onclick="openModal('${b.id}')" class="w-full text-center bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-2 rounded-xl text-xs transition">
-                Ver ficha & catálogo
-              </button>
-              ${whatsappButtonHTML}
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    function filterDirectory() {
-      const searchInput = document.getElementById("searchInput");
-      const query = searchInput ? searchInput.value.toLowerCase() : "";
-      const filtered = businesses.filter(b => {
-        const matchesCategory = selectedCategory === "Todas" || b.category === selectedCategory;
-        const matchesQuery = b.name.toLowerCase().includes(query) || 
-                             b.category.toLowerCase().includes(query) || 
-                             b.description.toLowerCase().includes(query) ||
-                             b.address.toLowerCase().includes(query);
-        return matchesCategory && matchesQuery;
-      });
-      renderDirectory(filtered);
-    }
-
-    function selectCategory(cat) {
-      selectedCategory = cat;
-      renderCategories();
-      filterDirectory();
-    }
-
-    function resetFilters() {
-      selectedCategory = "Todas";
-      const searchInput = document.getElementById("searchInput");
-      if (searchInput) searchInput.value = "";
-      renderCategories();
-      renderDirectory(businesses);
-    }
-
-    function openModal(id) {
-      const item = businesses.find(b => b.id === id);
-      if (!item) return;
-
-      currentOpenedBusinessId = id;
-      window.location.hash = id; // Actualiza la URL para que sea compartible
-
-      const status = getBusinessStatus(item.openHour, item.closeHour);
-
-      document.getElementById("modalCategory").innerText = item.category;
-      document.getElementById("modalTitle").innerText = item.name;
-      document.getElementById("modalAddress").innerText = `📍 ${item.address}`;
-      document.getElementById("modalHours").innerText = item.hoursText;
-      document.getElementById("modalPayments").innerText = item.payments;
-      document.getElementById("modalPhone").innerText = item.phone;
-      document.getElementById("modalDescription").innerText = item.description;
-
-      // Renderizar catálogo como cajitas/tarjetas limpias
-      const catalogContainer = document.getElementById("modalCatalog");
-      catalogContainer.innerHTML = item.catalog.map(prod => `
-        <div class="bg-blue-50/60 p-3 rounded-xl border border-blue-100/80 flex flex-col justify-between">
-          <span class="font-bold text-xs text-gray-900">${prod.item}</span>
-          <span class="text-[11px] text-gray-500 mt-0.5">${prod.detail}</span>
-        </div>
-      `).join('');
-
-      // Botón WhatsApp
-      const modalBtn = document.getElementById("modalWhatsappBtn");
-      if (status.isOpen) {
-        modalBtn.href = `https://wa.me/${item.whatsapp}?text=Hola,%20vi%20su%20perfil%20en%20T%C3%A1chira%20Digital%20y%20me%20interesa%20informaci%C3%B3n.`;
-        modalBtn.className = "block w-full text-center bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-xl text-sm transition shadow-sm";
-        modalBtn.innerText = "Escribir por WhatsApp";
-        modalBtn.style.pointerEvents = "auto";
-      } else {
-        modalBtn.href = "#";
-        modalBtn.className = "block w-full text-center bg-gray-200 text-gray-400 font-bold py-3 rounded-xl text-sm cursor-not-allowed select-none";
-        modalBtn.innerText = "Local Cerrado (No disponible)";
-        modalBtn.style.pointerEvents = "none";
-      }
-
-      document.getElementById("businessModal").classList.remove("hidden");
-    }
-
-    function closeModal() {
-      document.getElementById("businessModal").classList.add("hidden");
-      history.pushState("", document.title, window.location.pathname + window.location.search); // Limpia el # sin recargar
-    }
-
-    function copyBusinessLink() {
-      if (!currentOpenedBusinessId) return;
-      const shareUrl = `${window.location.origin}/#${currentOpenedBusinessId}`;
-      navigator.clipboard.writeText(shareUrl).then(() => {
-        alert("¡Enlace copiado al portapapeles! Puedes pegarlo en tus redes sociales.");
-      });
-    }
-
-    // ABRIR DIRECTO SI LA URL TIENE UN #ID
-    function checkUrlHash() {
-      const hash = window.location.hash.replace('#', '');
-      if (hash) {
-        openModal(hash);
-      }
-    }
-
-    window.onload = function() {
-      renderCategories();
-      renderDirectory(businesses);
-      checkUrlHash();
-    };
-  </script>
-</body>
-</html>
+        catalog:
